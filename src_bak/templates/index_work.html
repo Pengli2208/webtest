@@ -1,0 +1,537 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="Generator" content="EditPlus®">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+ 
+  <title>江森自控</title>
+  <script src="static/jquery.min.js"></script>
+  <script src="static/Chart.bundle.js"></script> 
+  <script src="static/utils.js"></script> 
+  <script src="static/test.js"></script> 
+  <script>
+ 	
+	var arrPoint1 = []; // 用于保存已经波形图的轨迹?
+	var arrPoint2 = []; // 用于保存已经波形图的轨迹?
+	var y_base1 = 150;
+	var y_base2 = 150;
+	
+
+	//var y_base1 = 200;
+	//var width = 0;
+	//var height = 0;
+	//var y_base = 250;
+	function DrawBase(ctx, width, height)
+	{
+		/*
+		默认的线条宽px
+		默认的颜色是黑色
+		产生的原因是
+		*/
+		//获取元素
+		
+		//var width = ctx.width;
+		//var height = ctx.width;
+		var spance=20;
+
+		var grid=100;
+		var xLineNumber=Math.floor(width/grid);//计算需要几条横
+		var yLineNumber=Math.floor(height/grid);//计算需要几条竖
+		ctx.strokeStyle="#eee";
+		for(var i=0;i<xLineNumber;i++){//循环来画
+		  ctx.beginPath();
+		  ctx.moveTo(i*grid,0);
+		  ctx.lineTo(i*grid,height);
+		  ctx.stroke();
+		}
+		for(var i=0;i<yLineNumber;i++){
+		  ctx.beginPath();
+		  ctx.moveTo(0,i*grid);
+		  ctx.lineTo(width,i*grid);
+		  ctx.stroke();
+		}
+		//绘制坐标
+		
+		//1.绘制Y    
+		var arrowSize=10;
+		ctx.beginPath();
+		ctx.moveTo(spance,spance);
+		ctx.lineTo(spance,height-spance);
+		ctx.strokeStyle="red";
+		
+		ctx.fillStyle = "red"
+		ctx.stroke();
+		//2.绘制X
+		ctx.moveTo(spance,height-spance);
+		ctx.lineTo(width-spance,height-spance);
+		ctx.stroke();
+		ctx.closePath();
+		//3.绘制X轴的箭头
+		ctx.beginPath();
+		ctx.moveTo(width-spance,height-spance-5);
+		ctx.lineTo(width-spance,height-spance+5);
+		ctx.lineTo(width-spance+10,height-spance);
+		ctx.fill();
+		ctx.closePath();
+		//绘制Y轴箭
+		ctx.beginPath();
+		ctx.moveTo(spance-5,spance);
+		ctx.lineTo(spance+5,spance);
+		ctx.lineTo(spance,spance-10);
+		ctx.lineTo(spance-5,spance);
+		ctx.fill();
+		
+		ctx.closePath();
+	}
+	function UpdateData(typ, context_1, y_base_1,width1, height1)
+	{
+		// 首先让我们的函数周期调用
+		var step = 10; // x轴每次走的步?
+		var spance = 20;
+		DrawBase(context_1,width1, height1);
+		// 获取canvas对象和context,并进行一系列初始
+		//PageLoad(context_1);
+		
+		
+		context_1.beginPath();
+		//DrawBase(context_1)
+		if(typ == 0)
+		{
+			if(arrPoint1.length>(width1/step)){
+				arrPoint1.splice(0,1);
+			}
+			arrPoint1.push(y_base_1);
+			for(var i = 0; i < arrPoint1.length; i++){
+				context_1.lineTo(spance+i*step,arrPoint1[i]);
+			}
+		}
+		else
+		{
+			if(arrPoint2.length>(width1/step)){
+				arrPoint2.splice(0,1);
+			}
+			arrPoint2.push(y_base_1);
+			for(var i = 0; i < arrPoint2.length; i++){
+				context_1.lineTo(spance+i*step,arrPoint2[i]);
+			}
+		}
+		// 再一次性将所有图形呈现在html
+		context_1.stroke();
+		context_1.closePath();
+		// OK,这时候已经花完了,现在要算一算我们的下一个目标点的坐标了,算完了以保存在一个全局变量
+		// 等待下次再执行画图函数时,将变量添加到数组让canvas画图使用
+
+
+	}
+
+	function UpdateData2(context_1, y_base_1,width1, height1)
+	{
+		// 首先让我们的函数周期调用
+		var step = 10; // x轴每次走的步?
+		var spance = 20;
+		DrawBase(context_1,width1, height1);
+		// 获取canvas对象和context,并进行一系列初始
+		//PageLoad(context_1);
+		
+		
+		context_1.beginPath();
+		{
+			if(arrPoint2.length>(width1/step)){
+				arrPoint2.splice(0,1);
+			}
+			arrPoint2.push(y_base_1);
+			for(var i = 0; i < arrPoint2.length; i++){
+				context_1.lineTo(spance+i*step,arrPoint2[i]);
+			}
+		}
+		// 再一次性将所有图形呈现在html
+		context_1.stroke();
+		context_1.closePath();
+		// OK,这时候已经花完了,现在要算一算我们的下一个目标点的坐标了,算完了以保存在一个全局变量
+		// 等待下次再执行画图函数时,将变量添加到数组让canvas画图使用
+
+
+	}
+	function Onetime1()
+	{	
+		
+		var canvas_1 = document.getElementById("canvas_wave1");
+		var tb = document.getElementById("t_b_9");
+		// 获得canvas上下文
+		canvas_1.width = parseInt(getStyle(tb,"width"));
+		canvas_1.height = parseInt(getStyle(tb,"height"));
+		//canvas_1.width=window.innerWidth*0.6;
+		//canvas_1.height=300;//window.innerHeight*0.66;
+		var context_1 = canvas_1.getContext("2d");
+		var urlStr = "/refreshCnt1?time="+Math.random();
+		$.ajax({url:urlStr, 
+		  success:function(data)
+		  {
+			//alert(data);
+			$("#cnt1").html(data);
+			y_base1 = 50+Number(data)%50;
+			$("#cnt1").html(y_base1.toString());
+			//("#cnt").html(data+1000);
+			//y_base = 150+ Math.random()*20;
+		  },
+		  error:function()
+		  {
+			$("#cnt1").html("error");
+			//y_base = 250+ Math.random()*20;
+		  }
+		});
+		UpdateData(0, context_1, y_base1,canvas_1.width,canvas_1.height);
+	}
+	function Onetime2()
+	{
+		var canvas_1 = document.getElementById("canvas_wave2");
+		var tb = document.getElementById("t_b_9");
+		// 获得canvas上下文
+		canvas_1.width = parseInt(getStyle(tb,"width"));
+		canvas_1.height = parseInt(getStyle(tb,"height"));
+		var context_1 = canvas_1.getContext("2d");
+		var urlStr = "/refreshCnt2?time="+Math.random();
+		
+		$.ajax({url:urlStr, 
+			success:function(data)
+			{
+				//alert(data);
+				$("#cnt2").html(data);
+				y_base2 = 100-Number(data)%100;
+				$("#cnt2").html(y_base2.toString());
+				//("#cnt").html(data+1000);
+				//y_base = 150+ Math.random()*20;
+			},
+			error:function()
+			{
+				$("#cnt2").html("error");
+				//y_base = 250+ Math.random()*20;
+			}
+		});
+
+		//DrawBase(context_1)
+		UpdateData(1,context_1, y_base2,canvas_1.width,canvas_1.height);
+	}
+	function refreshData()
+	{
+		
+		var itv = setInterval(Onetime1,100);
+		var itv = setInterval(Onetime2,100);
+	}
+	refreshData()
+        
+	
+ 
+  </script>
+  <style>
+        .wrap{
+            min-width:990px;
+            margin:0 auto;
+        }
+        .common {
+            float:left;
+            width: 20%;
+            height:100px;
+        }
+        .left{
+            float:left;
+            width: 25%;
+        }
+        .box6{
+            float:left;
+            height:600px;
+        }
+        .box7{
+            float:left;
+			width: 45%;
+            height:300px;
+        }
+		.box7_1{
+            float:left;
+			width: 10%;
+            height:300px;
+        }
+		.box8{
+            float:right;
+			width: 45%;
+            height:300px;
+        }
+        .right{
+			position: relative;
+            float: left;
+            width: 75%;
+        }
+        .left-common{
+            float: left;
+            width:25%;
+            height:600px;
+        }
+        .box9{
+            height:250px;
+        }
+        .box10{
+            height:250px;
+        }
+        
+        .box11{
+            clear: both;
+            height:100px;
+        }
+        .box1{
+            background:#ccc;
+        }
+        .box2{
+            background:#a9a9a9;
+        }
+        .box3{
+            background:#ccc;
+        }
+        .box4{
+            background:#a9a9a9;
+        }
+        .box5{
+            background:#ccc;
+        }
+        .box6{
+            background:#1200;
+        }
+        .box11{
+            background:#d9d9d9;
+        }
+    </style>
+ </head>
+ 
+
+<body bgcolor=#3c3431>
+	<span></span>
+	<h1 align="center" style="color:#238e23 ; font-size:60px">双工位接管法兰焊接工作站　－　环缝焊接</h1>
+	<span></span>
+
+	<!-- <h2 id="cnt1">error 1</h2> 
+	<h2 id="cnt2">error 2</h2>  -->
+    <div class=".wrap">
+		<div class = "box7">
+			<img src="static/logo.png" alt="江森自控" width=100%>
+		</div>
+		<div class = "box7_1">
+			<img src="static/logo.png" alt="江森自控" width=100%>
+		</div>
+		<div class = "box8">
+			<img src="static/logo.png" alt="江森自控" width=100%>
+		</div>
+        <div class="left">
+            <div class="left-commone box6" id="t_b_6">
+            <canvas id="barChart" height="300" width="350" style="margin:10px"> 你的浏览器不支持HTML5 canvas </canvas>
+			<script>
+			function goBarChart(dataArr){
+			// 声明所需变量
+			var canvas,ctx;
+			// 图表属
+			var cWidth, cHeight, cMargin, cSpace;
+			var originX, originY;
+			// 柱状图属
+			var bMargin, tobalBars, bWidth, maxValue;
+			var totalYNomber;
+			var gradient;
+			var gradient1;
+			var gradient2;
+			var gradient3;
+			var color_ = ['blue','green','red']
+			// 运动相关变量
+			var ctr, numctr, speed;
+			//鼠标移动
+			var mousePosition = {};
+
+			// 获得canvas上下
+			var tb = document.getElementById("t_b_6");
+			var canvas = document.getElementById("barChart");
+			// 获得canvas上下文
+			canvas.width= parseInt(getStyle(tb,"width"));
+			canvas.height= parseInt(getStyle(tb,"height"));
+			
+			if(canvas && canvas.getContext){
+				ctx = canvas.getContext("2d");
+			}
+			initChart(); // 图表初始
+			drawLineLabelMarkers(); // 绘制图表轴、标签和标记
+			drawBarAnimate(); // 绘制柱状图的动画
+			//检测鼠标移
+			var mouseTimer = null;
+			canvas.addEventListener("mousemove",function(e){
+				e = e || window.event;
+				if( e.layerX || e.layerX==0 ){
+					mousePosition.x = e.layerX;
+					mousePosition.y = e.layerY;
+				}else if( e.offsetX || e.offsetX==0 ){
+					mousePosition.x = e.offsetX;
+					mousePosition.y = e.offsetY;
+				}
+				
+				clearTimeout(mouseTimer);
+				mouseTimer = setTimeout(function(){
+					ctx.clearRect(0,0,canvas.width, canvas.height);
+					drawLineLabelMarkers();
+					drawBarAnimate(true);
+				},100);
+			});
+
+			//点击刷新图表
+			canvas.onclick = function(){
+				initChart(); // 图表初始
+				drawLineLabelMarkers(); // 绘制图表轴、标签和标记
+				drawBarAnimate(); // 绘制折线图的动画
+			};
+
+
+			// 图表初始
+			function initChart(){
+				cMargin = 15;
+				cSpace = 40;
+				cHeight = canvas.height - cMargin*2 - cSpace;
+				cWidth = canvas.width - cMargin*2 - cSpace;
+				originX = cMargin + cSpace;
+				originY = cMargin + cHeight;
+
+				// 柱状图信
+				bMargin = 10;
+				tobalBars = dataArr.length;
+				bWidth = parseInt( cWidth/tobalBars - bMargin );
+				maxValue = 0;
+				for(var i=0; i<dataArr.length; i++){
+					var barVal = parseInt( dataArr[i][1] );
+					if( barVal > maxValue ){
+						maxValue = barVal;
+					}
+				}
+				maxValue += 30;
+				totalYNomber = 10;
+				// 运动相关
+				ctr = 1;
+				numctr = 100;
+				speed = 10;
+
+			}
+
+			// 绘制图表轴、标签和标记
+			function drawLineLabelMarkers(){
+				ctx.translate(0.5,0.5);  // 当只绘制1像素的线的时候，坐标点需要偏移，这样才能画出1像素实线
+				ctx.font = "24px Arial";
+				ctx.lineWidth = 1;
+				ctx.fillStyle = "green";
+				ctx.strokeStyle = "grey";
+				// y
+				drawLine(originX, originY, originX, cMargin);
+				// x
+				drawLine(originX, originY, originX+cWidth, originY);
+
+				// 绘制标记
+				drawMarkers();
+				ctx.translate(-0.5,-0.5);  // 还原位置
+			}
+
+			// 画线的方
+			function drawLine(x, y, X, Y){
+				ctx.beginPath();
+				ctx.moveTo(x, y);
+				ctx.lineTo(X, Y);
+				ctx.stroke();
+				ctx.closePath();
+			}
+
+			// 绘制标记
+			function drawMarkers(){
+				ctx.strokeStyle = "blue";
+				// 绘制 y
+				var oneVal = parseInt(maxValue/totalYNomber);
+				ctx.textAlign = "right";
+				for(var i=0; i<=totalYNomber; i++){
+					var markerVal =  i*oneVal;
+					var xMarker = originX-5;
+					var yMarker = parseInt( cHeight*(1-markerVal/maxValue) ) + cMargin;
+					//console.log(xMarker, yMarker+3,markerVal/maxValue,originY);
+					ctx.fillText(markerVal, xMarker, yMarker+3, cSpace); // 文字
+					if(i>0){
+						drawLine(originX, yMarker, originX+cWidth, yMarker);
+					}
+				}
+				// 绘制 x
+				ctx.textAlign = "center";
+				for(var i=0; i<tobalBars; i++){
+					var markerVal = dataArr[i][0];
+					var xMarker = parseInt( originX+cWidth*(i/tobalBars)+bMargin+bWidth/2 );
+					var yMarker = originY+25;
+					ctx.fillText(markerVal, xMarker, yMarker, cSpace); // 文字
+				}
+				// 绘制标题 y
+				ctx.save();
+				ctx.rotate(-Math.PI/2);
+				ctx.fillText("任 务", -canvas.height/2, cSpace-22);
+				ctx.restore();
+				// 绘制标题 x
+				ctx.fillText("计 划", originX+cWidth/2, originY+cSpace/2+30);
+			};
+
+			//绘制柱形
+			function drawBarAnimate(mouseMove){
+				for(var i=0; i<tobalBars; i++){
+					var oneVal = parseInt(maxValue/totalYNomber);
+					var barVal = dataArr[i][1];
+					var barH = parseInt( cHeight*barVal/maxValue * ctr/numctr );
+					var y = originY - barH;
+					var x = originX + (bWidth+bMargin)*i + bMargin;
+					drawRect( x, y, bWidth, barH, mouseMove, i); //高度减一避免盖住
+					ctx.fillText(parseInt(barVal*ctr/numctr), x+15, y-8); // 文字
+				}
+				if(ctr<numctr){
+					ctr++;
+					setTimeout(function(){
+						ctx.clearRect(0,0,canvas.width, canvas.height);
+						drawLineLabelMarkers();
+						drawBarAnimate();
+					}, speed);
+				}
+			}
+
+			//绘制方块
+			function drawRect( x, y, X, Y, mouseMove, idx ){
+				ctx.beginPath();
+				ctx.rect( x, y, X, Y );
+				if(mouseMove && ctx.isPointInPath(mousePosition.x, mousePosition.y)){ //如果是鼠标移动的到柱状图上，重新绘制图表
+					ctx.fillStyle = color_[idx];
+				}else{
+					ctx.fillStyle = color_[idx];
+				}
+				ctx.fill();
+				ctx.closePath();
+
+			}
+
+
+		}
+			goBarChart(
+				[["计划任务", 60,'yellow'], ["完成任务", 45, 'green'], ["未完成任务", 15,'red']]
+			)
+			</script>
+            </div>
+        </div>
+        <div class="right">
+            <div class="box9" id="t_b_9">
+            <canvas id="canvas_wave1" height="250"> 你的浏览器不支持HTML5 canvas </canvas>
+            </div>
+            <div class="box10" id="t_b_10">
+            <canvas id="canvas_wave2" width="650" height="250"> 你的浏览器不支持HTML5 canvas </canvas>
+            </div>
+			<div class="common box1">1</div>
+			<div class="common box2">2</div>
+			<div class="common box3">3</div>
+			<div class="common box4">4</div>
+			<div class="common box5">5</div>
+        </div>
+		<canvas id="canvas_wave5" hight=800>
+		你这不行,不支持canvas
+	    </canvas>
+</body>
+</html>

@@ -1,0 +1,160 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="Generator" content="EditPlus®">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+ 
+  <title>江森自控</title>
+  <script src="static/jquery.min.js"></script>
+  <script src="static/Chart.bundle.js"></script> 
+  <script src="static/test1.js"></script> 
+  <script src="static/test2.js"></script> 
+
+  <style>
+        .wrap{
+            min-width:990px;
+            margin:0 auto;
+        }
+        .common {
+            float:left;
+            width: 20%;
+            height:100px;
+        }
+        .left{
+            float:left;
+            width: 25%;
+        }
+        .box6{
+            height:600px;
+        }
+        .box7{
+            float:left;
+			width: 45%;
+            height:300px;
+            overflow:hidden;
+        }
+		.box7_1{
+            float:left;
+			width: 10%;
+            height:300px;
+            overflow:hidden;
+        }
+		.box8{
+            float:right;
+			width: 45%;
+            height:300px;
+            overflow:hidden;
+        }
+        .right{
+			position: relative;
+            float: left;
+            width: 75%;
+        }
+        .left-common{
+            float: left;
+            width:25%;
+            height:600px;
+        }
+        .box9{
+            height:250px;
+        }
+        .box10{
+            height:250px;
+        }
+        
+        .box11{
+            clear: both;
+            height:100px;
+        }
+        .box1{
+            background:#ccc;
+        }
+        .box2{
+            background:#a9a9a9;
+        }
+        .box3{
+            background:#ccc;
+        }
+        .box4{
+            background:#a9a9a9;
+        }
+        .box5{
+            background:#ccc;
+        }
+        .box6{
+            background:#1200;
+        }
+        .box11{
+            background:#d9d9d9;
+        }
+    </style>
+    <script>
+        //窗口大小变化时候，进行刷新页面操作，防止样式混乱
+        var x=window.innerWidth;
+        function resizeFresh(){
+            if(x!=window.innerWidth)
+                location.reload();
+        }
+    </script>
+ </head>
+ 
+
+<body bgcolor=#3c3431 onresize="resizeFresh()">
+	<span></span>
+	<h1 align="center" style="color:#238e23 ; font-size:60px">双工位接管法兰焊接工作站　－　环缝焊接</h1>
+	<span></span>
+
+	<!-- <h2 id="cnt1">error 1</h2> 
+	<h2 id="cnt2">error 2</h2>  -->
+    <div class=".wrap">
+		<div class = "box7">
+			<img src="static/logo.png" alt="江森自控" width=100% >
+		</div>
+		<div class = "box7_1">
+			<img src="static/logo.png" alt="江森自控" width=100%>
+		</div>
+		<div class = "box8">
+			<img src="static/logo.png" alt="江森自控" width=100%>
+		</div>
+        <div class="left">
+            <div class="box6" id="t_b_6">
+            <canvas id="barChart" height="550"> 你的浏览器不支持HTML5 canvas </canvas>
+            <script>
+            goBarChart(
+                        [["计划任务", 60,'yellow'], ["完成任务", 45, 'green'], ["未完成任务", 15,'red']]
+                    ) 
+            </script>
+            </div>
+        </div>
+        <div class="right">
+            <div class="box9" id="t_b_9">
+            <canvas id="canvas_wave1" height="250"> 你的浏览器不支持HTML5 canvas </canvas>
+            </div>
+            <div class="box10" id="t_b_10">
+            <canvas id="canvas_wave2" height="250"> 你的浏览器不支持HTML5 canvas </canvas>
+              <script>
+                
+
+                
+
+                //var y_base1 = 200;
+                //var width = 0;
+                //var height = 0;
+                //var y_base = 250;
+                RefreshData()
+            </script>
+            </div>
+			<div class="common box1">1</div>
+			<div class="common box2">2</div>
+			<div class="common box3">3</div>
+			<div class="common box4">4</div>
+			<div class="common box5">5</div>
+        </div>
+		<canvas id="canvas_wave5" hight=800>
+		你这不行,不支持canvas
+	    </canvas>
+</body>
+</html>

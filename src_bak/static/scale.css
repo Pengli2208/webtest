@@ -1,0 +1,32 @@
+.scale1 img{
+		max-width: 42%;
+		max-height: 42%;
+		vertical-align: middle;
+	    }
+.scale2 img{
+		max-width: 10%;
+		max-height: 10%;
+		vertical-align: middle;
+	    }
+	body{
+		margin: 0;
+	    }
+	    p{
+		width: 20px;
+		height: 20px;
+		display: table-cell;
+		text-align: center;
+		vertical-align: middle;
+		border: 1px solid #000;
+		background-color: #f00;
+	    }
+	    img{
+		max-width: 42%;
+		max-height: 42%;
+		vertical-align: middle;
+	    }
+	    img{
+		max-width: 10%;
+		max-height: 10%;
+		vertical-align: middle;
+	    }
