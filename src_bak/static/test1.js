@@ -19,7 +19,6 @@ function goBarChart(dataArr) {
     var mousePosition = {};
 
     // 获得canvas上下
-
     var canvas = document.getElementById("barChart");
     // 获得canvas上下文
     canvas.width = parseInt(GetStyle1("width"));
@@ -73,14 +72,14 @@ function goBarChart(dataArr) {
     // 图表初始
     function initChart() {
         cMargin = 15;
-        cSpace = 40;
+        cSpace = 45;
         cHeight = canvas.height - cMargin * 2 - cSpace;
         cWidth = canvas.width - cMargin * 2 - cSpace;
         originX = cMargin + cSpace;
         originY = cMargin + cHeight;
 
         // 柱状图信
-        bMargin = 10;
+        bMargin = 20;
         tobalBars = dataArr.length;
         bWidth = parseInt(cWidth / tobalBars - bMargin);
         maxValue = 0;
@@ -102,9 +101,10 @@ function goBarChart(dataArr) {
     // 绘制图表轴、标签和标记
     function drawLineLabelMarkers() {
         ctx.translate(0.5, 0.5); // 当只绘制1像素的线的时候，坐标点需要偏移，这样才能画出1像素实线
-        ctx.font = "24px Arial";
+        ctx.font = "22px Arial";
         ctx.lineWidth = 1;
-        ctx.fillStyle = "green";
+
+        ctx.fillStyle = "rgba(0,200,0,0.9)";
         ctx.strokeStyle = "grey";
         // y
         drawLine(originX, originY, originX, cMargin);
@@ -114,6 +114,7 @@ function goBarChart(dataArr) {
         // 绘制标记
         drawMarkers();
         ctx.translate(-0.5, -0.5); // 还原位置
+
     }
 
     // 画线的方
@@ -127,7 +128,8 @@ function goBarChart(dataArr) {
 
     // 绘制标记
     function drawMarkers() {
-        ctx.strokeStyle = "blue";
+        ctx.fillStyle = "rgba(0,200,0,0.9)";
+        ctx.strokeStyle = "grey";
         // 绘制 y
         var oneVal = parseInt(maxValue / totalYNomber);
         ctx.textAlign = "right";
@@ -152,10 +154,14 @@ function goBarChart(dataArr) {
         // 绘制标题 y
         ctx.save();
         ctx.rotate(-Math.PI / 2);
-        ctx.fillText("任 务", -canvas.height / 2, cSpace - 22);
+        ctx.fillText("任   务", -canvas.height / 2, cSpace - 22);
         ctx.restore();
         // 绘制标题 x
-        ctx.fillText("计 划", originX + cWidth / 2, originY + cSpace / 2 + 30);
+        ctx.fillText("计   划", originX + cWidth / 2, originY + cSpace / 2 + 30);
+
+        ctx.lineWidth = 1; //设置边框大写
+        ctx.strokeStyle = "red"; //填充边框颜色
+        ctx.strokeRect(1, 1, canvas.width - 2, canvas.height - 2); //对边框的设置
     }
 
     //绘制柱形
@@ -167,7 +173,8 @@ function goBarChart(dataArr) {
             var y = originY - barH;
             var x = originX + (bWidth + bMargin) * i + bMargin;
             drawRect(x, y, bWidth, barH, mouseMove, i); //高度减一避免盖住
-            ctx.fillText(parseInt(barVal * ctr / numctr), x + 15, y - 8); // 文字
+
+            ctx.fillText(parseInt(barVal * ctr / numctr), x + 28, y - 6); // 文字
         }
         if (ctr < numctr) {
             ctr++;
@@ -183,6 +190,8 @@ function goBarChart(dataArr) {
     function drawRect(x, y, X, Y, mouseMove, idx) {
         ctx.beginPath();
         ctx.rect(x, y, X, Y);
+        ctx.shadowBlur = 20;
+        ctx.shadowColor = "black";
         if (mouseMove && ctx.isPointInPath(mousePosition.x, mousePosition.y)) { //如果是鼠标移动的到柱状图上，重新绘制图表
             ctx.fillStyle = color_[idx];
         } else {

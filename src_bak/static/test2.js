@@ -4,7 +4,16 @@ var y_base1 = 150;
 var y_base2 = 150;
 
 function RefreshData() {
+    // 图表属
+    var cSpaceX, cSpaceH, cMargin;
+    var valueYMax;
 
+    function InitChart(canvas) {
+        cSpaceH = 30;
+        cSpaceX = 45;
+        cMargin = 10;
+        valueYMax = 800;
+    }
 
     function GetStyle2(element, property) {
         var proValue = null;
@@ -27,77 +36,104 @@ function RefreshData() {
 
         //var width = ctx.width;
         //var height = ctx.width;
-        var spance = 20;
-
-        var grid = 100;
-        var xLineNumber = Math.floor(width / grid); //计算需要几条横
-        var yLineNumber = Math.floor(height / grid); //计算需要几条竖
+        var y_base = height - cSpaceH;
+        var gridx = 80;
+        var yLineNumber = 5;
+        var xLineNumber = Math.floor((width - cSpaceH) / gridx); //计算需要几条横
+        var gridy = Math.floor((height - cSpaceH) / yLineNumber); //计算需要几条竖
+        var yRatio = Math.floor(valueYMax / yLineNumber);
         ctx.strokeStyle = "#eee";
-        for (var i = 0; i < xLineNumber; i++) { //循环来画
-            ctx.beginPath();
-            ctx.moveTo(i * grid, 0);
-            ctx.lineTo(i * grid, height);
-            ctx.stroke();
+        //Y
+        ctx.textAlign = "center";
+        ctx.font = "20px Arial";
+        for (var i = 0; i < xLineNumber + 1; i++) { //循环来画
+            if (i * gridx + cSpaceX <= (width - cSpaceH)) {
+                ctx.strokeStyle = "#eee";
+                ctx.beginPath();
+                ctx.moveTo(i * gridx + cSpaceX, cMargin);
+                ctx.lineTo(i * gridx + cSpaceX, y_base);
+                ctx.stroke();
+                ctx.fillStyle = "rgba(0,200,0,0.9)";
+                ctx.strokeStyle = "grey";
+                ctx.fillText((i * gridx).toString(), i * gridx + cSpaceH, y_base + 20);
+            }
         }
-        for (var i = 0; i < yLineNumber; i++) {
-            ctx.beginPath();
-            ctx.moveTo(0, i * grid);
-            ctx.lineTo(width, i * grid);
-            ctx.stroke();
+        ctx.strokeStyle = "#eee";
+        for (var i = 0; i < yLineNumber + 1; i++) {
+            if (height - cSpaceH - i * gridy >= cSpaceH) {
+                ctx.strokeStyle = "#eee";
+                ctx.beginPath();
+                ctx.moveTo(cSpaceX, height - cSpaceH - i * gridy);
+                ctx.lineTo(width - cMargin, height - cSpaceH - i * gridy);
+                ctx.stroke();
+                ctx.fillStyle = "rgba(0,200,0,0.9)";
+                ctx.strokeStyle = "grey";
+                if (i != 0)
+                    ctx.fillText((i * yRatio).toString(), cSpaceX - 20, height - cSpaceH - i * gridy + 10);
+            }
         }
         //绘制坐标
 
-        //1.绘制Y    
-        var arrowSize = 10;
+        //1.绘制Y   
+        var totalYNomber = 8;
+        var maxValueY = 800;
         ctx.beginPath();
-        ctx.moveTo(spance, spance);
-        ctx.lineTo(spance, height - spance);
-        ctx.strokeStyle = "red";
-
-        ctx.fillStyle = "red"
+        ctx.moveTo(cSpaceX, 0);
+        ctx.lineTo(cSpaceX, height - cSpaceH);
+        ctx.strokeStyle = "rgba(0,200,0,0.9)";
+        ctx.fillStyle = "rgba(0,200,0,0.9)";
         ctx.stroke();
         //2.绘制X
-        ctx.moveTo(spance, height - spance);
-        ctx.lineTo(width - spance, height - spance);
+        ctx.moveTo(cSpaceX, height - cSpaceH);
+        ctx.lineTo(width, height - cSpaceH);
         ctx.stroke();
         ctx.closePath();
         //3.绘制X轴的箭头
         ctx.beginPath();
-        ctx.moveTo(width - spance, height - spance - 5);
-        ctx.lineTo(width - spance, height - spance + 5);
-        ctx.lineTo(width - spance + 10, height - spance);
+        ctx.moveTo(width - 10, height - cSpaceH - 5);
+        ctx.lineTo(width - 10, height - cSpaceH + 5);
+        ctx.lineTo(width, height - cSpaceH);
         ctx.fill();
         ctx.closePath();
         //绘制Y轴箭
         ctx.beginPath();
-        ctx.moveTo(spance - 5, spance);
-        ctx.lineTo(spance + 5, spance);
-        ctx.lineTo(spance, spance - 10);
-        ctx.lineTo(spance - 5, spance);
+        ctx.moveTo(cSpaceX - 5, 10);
+        ctx.lineTo(cSpaceX + 5, 10);
+        ctx.lineTo(cSpaceX, 0);
+        ctx.lineTo(cSpaceX - 5, 10);
         ctx.fill();
 
         ctx.closePath();
+        ctx.lineWidth = 1; //设置边框大写
+        ctx.strokeStyle = "blue"; //填充边框颜色
+        ctx.strokeRect(1, 1, width - 3, height - 3); //对边框的设置
     }
 
 
     function UpdateData(typ, context_1, y_base_1, width1, height1) {
         // 首先让我们的函数周期调用
         var step = 10; // x轴每次走的步?
-        var spance = 20;
+        InitChart(context_1);
+        if (typ == 0) {
+            valueYMax = 1000;
+        } else {
+            valueYMax = 60;
+        }
         DrawBase(context_1, width1, height1);
+
         // 获取canvas对象和context,并进行一系列初始
-        //PageLoad(context_1);
-
-
         context_1.beginPath();
+        context_1.strokeStyle = "red";
+        width1 = width1 - cSpaceX - cMargin;
         //DrawBase(context_1)
+        context_1.lineWidth = 2; //设置边框大写
         if (typ == 0) {
             if (arrPoint1.length > (width1 / step)) {
                 arrPoint1.splice(0, 1);
             }
             arrPoint1.push(y_base_1);
             for (var i = 0; i < arrPoint1.length; i++) {
-                context_1.lineTo(spance + i * step, arrPoint1[i]);
+                context_1.lineTo(cSpaceX + 1 + i * step, arrPoint1[i]);
             }
         } else {
             if (arrPoint2.length > (width1 / step)) {
@@ -105,7 +141,7 @@ function RefreshData() {
             }
             arrPoint2.push(y_base_1);
             for (var i = 0; i < arrPoint2.length; i++) {
-                context_1.lineTo(spance + i * step, arrPoint2[i]);
+                context_1.lineTo(cSpaceX + 1 + i * step, arrPoint2[i]);
             }
         }
         // 再一次性将所有图形呈现在html
@@ -113,7 +149,6 @@ function RefreshData() {
         context_1.closePath();
         // OK,这时候已经花完了,现在要算一算我们的下一个目标点的坐标了,算完了以保存在一个全局变量
         // 等待下次再执行画图函数时,将变量添加到数组让canvas画图使用
-
 
     }
 
@@ -135,7 +170,7 @@ function RefreshData() {
                 //alert(data);
                 // $("#cnt1").html(data);
                 y_base1 = 50 + Number(data) % 50;
-                // $("#cnt1").html(y_base1.toString());
+                $("#curr").html(y_base1.toString() + "A");
                 //("#cnt").html(data+1000);
                 //y_base = 150+ Math.random()*20;
             },
@@ -148,6 +183,7 @@ function RefreshData() {
     }
 
     function Onetime2() {
+        //InitChart
         var canvas_1 = document.getElementById("canvas_wave2");
         var tb = document.getElementById("t_b_9");
         // 获得canvas上下文
@@ -162,7 +198,7 @@ function RefreshData() {
                 //alert(data);
                 //$("#cnt2").html(data);
                 y_base2 = 100 - Number(data) % 100;
-                //  $("#cnt2").html(y_base2.toString());
+                $("#volt").html(y_base2.toString() + "V");
                 //("#cnt").html(data+1000);
                 //y_base = 150+ Math.random()*20;
             },

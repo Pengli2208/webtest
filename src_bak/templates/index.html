@@ -25,63 +25,103 @@
         }
         .left{
             float:left;
-            width: 25%;
+            width: 20%;
         }
         .box6{
             height:600px;
+            border:1px dashed #DC00;
         }
         .box7{
             float:left;
-			width: 45%;
+			width: 44%;
             height:300px;
             overflow:hidden;
         }
+
 		.box7_1{
             float:left;
-			width: 10%;
+			width: 12%;
             height:300px;
             overflow:hidden;
         }
 		.box8{
             float:right;
-			width: 45%;
+			width: 44%;
             height:300px;
             overflow:hidden;
         }
         .right{
 			position: relative;
             float: left;
-            width: 75%;
-        }
+            width: 80%;
+        }        
         .left-common{
             float: left;
-            width:25%;
-            height:600px;
+            width:20%;
+            height:650px;
+            
         }
+        .right1{
+			height:245px;
+        }   
         .box9{
-            height:250px;
+            float: left;
+            width:90%;
+            height:245px;
+        }
+        .box9_1{
+            position: relative;
+            float: left;
+            width:10%;
+            height:245px;
+            text-align:center;
+            line-height:22px;
+            background:#ccc;
         }
         .box10{
-            height:250px;
+            float: left;
+            width:90%;
+            height:245px;
         }
-        
+        .box10_1{
+            position: relative;
+            float: left;
+            width:10%;
+            height:245px;
+            text-align:center;
+            line-height:22px;
+            background:#ccc;
+        }
+        .box10_span{
+            height:5px;
+        }
         .box11{
             clear: both;
             height:100px;
         }
         .box1{
+            text-align:center;
+            line-height:22px;
             background:#ccc;
         }
         .box2{
+            text-align:center;
+            line-height:22px;
             background:#a9a9a9;
         }
         .box3{
+            text-align:center;
+            line-height:22px;
             background:#ccc;
         }
         .box4{
+            text-align:center;
+            line-height:22px;
             background:#a9a9a9;
         }
         .box5{
+            text-align:center;
+            line-height:22px;
             background:#ccc;
         }
         .box6{
@@ -124,34 +164,63 @@
             <canvas id="barChart" height="550"> 你的浏览器不支持HTML5 canvas </canvas>
             <script>
             goBarChart(
-                        [["计划任务", 60,'yellow'], ["完成任务", 45, 'green'], ["未完成任务", 15,'red']]
+                        [["计  划", 60,'yellow'], ["完  成", 45, 'green'], ["未 完 成", 15,'red']]
                     ) 
             </script>
             </div>
         </div>
         <div class="right">
-            <div class="box9" id="t_b_9">
-            <canvas id="canvas_wave1" height="250"> 你的浏览器不支持HTML5 canvas </canvas>
+            <div class = "right1">
+                <div class="box9" id="t_b_9">
+                <canvas id="canvas_wave1" height="200"> 你的浏览器不支持HTML5 canvas </canvas>
+                </div>
+                <div class="box9_1">
+                <h2 text-align:center style="color:#00c800">电  流</h1>
+                <h2 text-align:center id="curr" style="color:red" >1</h2>
+                </div>
             </div>
-            <div class="box10" id="t_b_10">
-            <canvas id="canvas_wave2" height="250"> 你的浏览器不支持HTML5 canvas </canvas>
-              <script>
-                
+	        <div class="box10_span"></div>
+            <div class = "right1">
+                <div class="box10" id="t_b_10">
+                <canvas id="canvas_wave2" height="200"> 你的浏览器不支持HTML5 canvas </canvas>
+                <script>
+                    
 
-                
+                    
 
-                //var y_base1 = 200;
-                //var width = 0;
-                //var height = 0;
-                //var y_base = 250;
-                RefreshData()
-            </script>
+                    //var y_base1 = 200;
+                    //var width = 0;
+                    //var height = 0;
+                    //var y_base = 250;
+                    RefreshData()
+                </script>
+                </div>
+                <div class="box9_1">
+                <h2 text-align:center style="color:#00c800">电  压</h1>
+                <h2 text-align:center id = "volt" style="color:red">1</h2>
+                </div>
             </div>
-			<div class="common box1">1</div>
-			<div class="common box2">2</div>
-			<div class="common box3">3</div>
-			<div class="common box4">4</div>
-			<div class="common box5">5</div>
+            <div class="box10_span"></div>
+			<div class="common box1">
+            <h2>工件号</h2>
+            <h2>1</h2>
+            </div>
+			<div class="common box2">
+            <h2>流水号</h2>
+            <h2>1</h2>
+            </div>
+			<div class="common box3">
+            <h2>操作员</h2>
+            <h2>1</h2>
+            </div>
+			<div class="common box4">
+            <h2>开机时间</h2>
+            <h2>10:33:00</h2>
+            </div>
+			<div class="common box5">
+            <h2>设备状态</h2>
+            <h2>idle</h2>
+            </div>
         </div>
 		<canvas id="canvas_wave5" hight=800>
 		你这不行,不支持canvas
