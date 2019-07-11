@@ -1,7 +1,7 @@
 var arrPoint1 = []; // 用于保存已经波形图的轨迹?
 var arrPoint2 = []; // 用于保存已经波形图的轨迹?
-var y_base1 = 150;
-var y_base2 = 150;
+var y_base1 = 0;
+var y_base2 = 0;
 
 function RefreshData() {
     // 图表属
@@ -55,7 +55,7 @@ function RefreshData() {
                 ctx.stroke();
                 ctx.fillStyle = "rgba(0,200,0,0.9)";
                 ctx.strokeStyle = "grey";
-                ctx.fillText((i * gridx).toString(), i * gridx + cSpaceH, y_base + 20);
+                ctx.fillText((i * gridx).toString(), i * gridx + cSpaceX, y_base + 20);
             }
         }
         ctx.strokeStyle = "#eee";
@@ -69,7 +69,7 @@ function RefreshData() {
                 ctx.fillStyle = "rgba(0,200,0,0.9)";
                 ctx.strokeStyle = "grey";
                 if (i != 0)
-                    ctx.fillText((i * yRatio).toString(), cSpaceX - 20, height - cSpaceH - i * gridy + 10);
+                    ctx.fillText((i * yRatio).toString(), cSpaceX - 20, height - cSpaceH - i * gridy + 6);
             }
         }
         //绘制坐标
@@ -105,7 +105,7 @@ function RefreshData() {
 
         ctx.closePath();
         ctx.lineWidth = 1; //设置边框大写
-        ctx.strokeStyle = "blue"; //填充边框颜色
+        ctx.strokeStyle = "grey"; //填充边框颜色
         ctx.strokeRect(1, 1, width - 3, height - 3); //对边框的设置
     }
 
@@ -120,18 +120,28 @@ function RefreshData() {
             valueYMax = 60;
         }
         DrawBase(context_1, width1, height1);
-
+        var y_ratio = (height1 - cSpaceH) / valueYMax;
         // 获取canvas对象和context,并进行一系列初始
         context_1.beginPath();
         context_1.strokeStyle = "red";
         width1 = width1 - cSpaceX - cMargin;
+        var value = height1 - cSpaceH - y_base_1 * y_ratio;
+
+        var value1 = value.toFixed(1);
+        y_ratio = y_ratio.toFixed(2);
+
+        if (typ == 0) {
+            $("#pieceid").html(value1.toString() + "," + y_ratio.toString() + "," + height1.toString());
+        } else {
+            $("#operator").html(value1.toString() + "," + y_ratio.toString() + "," + height1.toString());
+        }
         //DrawBase(context_1)
         context_1.lineWidth = 2; //设置边框大写
         if (typ == 0) {
             if (arrPoint1.length > (width1 / step)) {
                 arrPoint1.splice(0, 1);
             }
-            arrPoint1.push(y_base_1);
+            arrPoint1.push(value);
             for (var i = 0; i < arrPoint1.length; i++) {
                 context_1.lineTo(cSpaceX + 1 + i * step, arrPoint1[i]);
             }
@@ -139,7 +149,7 @@ function RefreshData() {
             if (arrPoint2.length > (width1 / step)) {
                 arrPoint2.splice(0, 1);
             }
-            arrPoint2.push(y_base_1);
+            arrPoint2.push(value);
             for (var i = 0; i < arrPoint2.length; i++) {
                 context_1.lineTo(cSpaceX + 1 + i * step, arrPoint2[i]);
             }
@@ -157,60 +167,41 @@ function RefreshData() {
 
         var canvas_1 = document.getElementById("canvas_wave1");
         var tb = document.getElementById("t_b_9");
-        // 获得canvas上下文
-        canvas_1.width = parseInt(GetStyle2(tb, "width"));
-        canvas_1.height = parseInt(GetStyle2(tb, "height"));
+
+        var context_1 = canvas_1.getContext("2d");
+
+        var canvas_2 = document.getElementById("canvas_wave2");
+        canvas_2.width = canvas_1.width = parseInt(GetStyle2(tb, "width"));
+        canvas_2.height = canvas_1.height = parseInt(GetStyle2(tb, "height"));
         //canvas_1.width=window.innerWidth*0.6;
         //canvas_1.height=300;//window.innerHeight*0.66;
-        var context_1 = canvas_1.getContext("2d");
-        var urlStr = "/refreshCnt1?time=" + Math.random();
+        var context_2 = canvas_2.getContext("2d");
+
+
+        var urlStr = "/refreshProcessData?time=" + Math.random();
         $.ajax({
             url: urlStr,
             success: function(data) {
                 //alert(data);
-                // $("#cnt1").html(data);
-                y_base1 = 50 + Number(data) % 50;
+                // $("#cnt1").html(data);'
+                var allData = data.split(",");
+                y_base1 = Number(allData[1]);
+                y_base2 = Number(allData[2]);
+                y_base1 = y_base1.toFixed(1);
                 $("#curr").html(y_base1.toString() + "A");
-                //("#cnt").html(data+1000);
-                //y_base = 150+ Math.random()*20;
-            },
-            error: function() {
-                // $("#cnt1").html("error");
-                //y_base = 250+ Math.random()*20;
-            }
-        });
-        UpdateData(0, context_1, y_base1, canvas_1.width, canvas_1.height);
-    }
-
-    function Onetime2() {
-        //InitChart
-        var canvas_1 = document.getElementById("canvas_wave2");
-        var tb = document.getElementById("t_b_9");
-        // 获得canvas上下文
-        canvas_1.width = parseInt(GetStyle2(tb, "width"));
-        canvas_1.height = parseInt(GetStyle2(tb, "height"));
-        var context_1 = canvas_1.getContext("2d");
-        var urlStr = "/refreshCnt2?time=" + Math.random();
-
-        $.ajax({
-            url: urlStr,
-            success: function(data) {
-                //alert(data);
-                //$("#cnt2").html(data);
-                y_base2 = 100 - Number(data) % 100;
+                y_base2 = y_base2.toFixed(1);
                 $("#volt").html(y_base2.toString() + "V");
                 //("#cnt").html(data+1000);
                 //y_base = 150+ Math.random()*20;
             },
             error: function() {
-                //$("#cnt2").html("error");
+                y_base1 = 0;
+                // $("#cnt1").html("error");
                 //y_base = 250+ Math.random()*20;
             }
         });
-
-        //DrawBase(context_1)
-        UpdateData(1, context_1, y_base2, canvas_1.width, canvas_1.height);
+        UpdateData(0, context_1, y_base1, canvas_1.width, canvas_1.height);
+        UpdateData(1, context_2, y_base2, canvas_2.width, canvas_2.height);
     }
-    var itv = setInterval(Onetime1, 100);
-    var itv = setInterval(Onetime2, 100);
+    var itv = setInterval(Onetime1, 250);
 }

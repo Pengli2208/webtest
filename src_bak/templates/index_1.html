@@ -1,0 +1,249 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="Generator" content="EditPlus®">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+ 
+  <title>江森自控</title>
+  <script src="static/jquery.min.js"></script>
+  <script src="static/Chart.bundle.js"></script> 
+  <script src="static/test1.js"></script> 
+  <script src="static/test2.js"></script> 
+
+  <style>
+        .wrap{
+            min-width:990px;
+            margin:0 auto;
+        }
+	.logo{
+		float:left;
+            	width: 580px;
+            	height:250px;
+	}
+	.logoleft{
+		position: relative;    
+		text-align:center;
+            	line-height:80px;        	
+            	height:250px;
+	}
+
+        .common {
+            float:left;
+            width: 20%;
+            height:100px;
+        }
+        .left{
+            float:left;
+            width: 20%;
+        }
+        .box6{
+            height:600px;
+            border:1px dashed #DC00;
+        }
+        .box7{
+            float:left;
+			width: 44%;
+            height:300px;
+            overflow:hidden;
+        }
+
+		.box7_1{
+            float:left;
+			width: 12%;
+            height:300px;
+            overflow:hidden;
+        }
+		.box8{
+            float:right;
+			width: 44%;
+            height:300px;
+            overflow:hidden;
+        }
+        .right{
+			position: relative;
+            float: left;
+            width: 80%;
+        }        
+        .left-common{
+            float: left;
+            width:20%;
+            height:650px;
+            
+        }
+        .right1{
+			height:245px;
+        }   
+        .box9{
+            float: left;
+            width:90%;
+            height:245px;
+        }
+        .box9_1{
+            position: relative;
+            float: left;
+            width:10%;
+            height:245px;
+            text-align:center;
+            line-height:22px;
+            background:#ccc;
+        }
+        .box10{
+            float: left;
+            width:90%;
+            height:245px;
+        }
+        .box10_1{
+            position: relative;
+            float: left;
+            width:10%;
+            height:245px;
+            text-align:center;
+            line-height:22px;
+            background:#ccc;
+        }
+        .box10_span{
+            height:5px;
+        }
+        .box11{
+            clear: both;
+            height:100px;
+        }
+        .box1{
+            text-align:center;
+            line-height:22px;
+            background:#ccc;
+        }
+        .box2{
+            text-align:center;
+            line-height:22px;
+            background:#a9a9a9;
+        }
+        .box3{
+            text-align:center;
+            line-height:22px;
+            background:#ccc;
+        }
+        .box4{
+            text-align:center;
+            line-height:22px;
+            background:#a9a9a9;
+        }
+        .box5{
+            text-align:center;
+            line-height:22px;
+            background:#ccc;
+        }
+        .box6{
+            background:#1200;
+        }
+        .box11{
+            background:#d9d9d9;
+        }
+    </style>
+    <script>
+        //窗口大小变化时候，进行刷新页面操作，防止样式混乱
+        var x=window.innerWidth;
+        function resizeFresh(){
+            if(x!=window.innerWidth)
+                location.reload();
+        }
+    </script>
+ </head>
+ 
+
+<body bgcolor=#3c3431 onresize="resizeFresh()">
+	<div class=".wrap">
+		<div class = "logo">
+		<img src="static/logo.png" alt="江森自控" width=100% >
+		</div>
+
+		<div class = "logoleft">
+		<h1 align="center" style="color:#238e23 ; font-size:60px">双工位接管法兰焊接工作站</h1>
+		<h1 align="center" style="color:#238e23 ; font-size:60px">环缝焊接</h1>
+		<span></span>
+		</div>
+		<!-- 
+		<h2 id="cnt1">error 1</h2> 
+		<h2 id="cnt2">error 2</h2> 
+    
+		<div class = "box7">
+			<img src="static/logo.png" alt="江森自控" width=100% >
+		</div>
+		<div class = "box7_1">
+			<img src="static/logo.png" alt="江森自控" width=100%>
+		</div>
+		<div class = "box8">
+			<img src="static/logo.png" alt="江森自控" width=100%>
+		</div>
+		
+ 		-->
+        <div class="left">
+            <div class="box6" id="t_b_6">
+            <canvas id="barChart" height="550"> 你的浏览器不支持HTML5 canvas </canvas>
+            <script>
+            goBarChart();
+            RefreshBar();
+            </script>
+            </div>
+        </div>
+        <div class="right">
+            <div class = "right1">
+                <div class="box9" id="t_b_9">
+                <canvas id="canvas_wave1" height="200"> 你的浏览器不支持HTML5 canvas </canvas>
+                </div>
+                <div class="box9_1">
+                <h2 text-align:center style="color:#00c800">电  流</h1>
+                <h2 text-align:center id="curr" style="color:red" >1</h2>
+                </div>
+            </div>
+	        <div class="box10_span"></div>
+            <div class = "right1">
+                <div class="box10" id="t_b_10">
+                <canvas id="canvas_wave2" height="200"> 你的浏览器不支持HTML5 canvas </canvas>
+                <script>
+                    
+
+                    
+
+                    //var y_base1 = 200;
+                    //var width = 0;
+                    //var height = 0;
+                    //var y_base = 250;
+                    RefreshData()
+                </script>
+                </div>
+                <div class="box9_1">
+                <h2 text-align:center style="color:#00c800">电  压</h1>
+                <h2 text-align:center id = "volt" style="color:red">1</h2>
+                </div>
+            </div>
+            <div class="box10_span"></div>
+			<div class="common box1">
+            <h2>工件号</h2>
+            <h2 id= "pieceid">1</h2>
+            </div>
+			<div class="common box2">
+            <h2>流水号</h2>
+            <h2 id= "processnum">1</h2>
+            </div>
+			<div class="common box3">
+            <h2>操作员</h2>
+            <h2 id= "operator">1</h2>
+            </div>
+			<div class="common box4">
+            <h2>开机时间</h2>
+            <h2 id= "time_1">10:33:00</h2>
+            </div>
+			<div class="common box5">
+            <h2>设备状态</h2>
+            <h2 id= "deviceStatus">idle</h2>
+            </div>
+        </div>
+		<canvas id="canvas_wave5" hight=800>
+		你这不行,不支持canvas
+	    </canvas>
+</body>
+</html>

@@ -2,18 +2,26 @@ var arrPoint1 = []; // 用于保存已经波形图的轨迹?
 var arrPoint2 = []; // 用于保存已经波形图的轨迹?
 var y_base1 = 150;
 var y_base2 = 150;
+var htmlValue = [80, 0, 80];
+var maxValue = 10;
 
-function goBarChart(dataArr) {
+function goBarChart() {
     // 声明所需变量
+    var dataArr = [
+        ["计  划", 'yellow'],
+        ["完  成", 'green'],
+        ["未 完 成", 'red']
+    ];
     var canvas, ctx;
     // 图表属
     var cWidth, cHeight, cMargin, cSpace;
     var originX, originY;
     // 柱状图属
-    var bMargin, tobalBars, bWidth, maxValue;
+    var bMargin, tobalBars, bWidth;
     var totalYNomber;
-    var color_ = ['blue', 'green', 'red']
-        // 运动相关变量
+    var color_ = ['blue', 'green', 'red'];
+
+    // 运动相关变量
     var ctr, numctr, speed;
     //鼠标移动
     var mousePosition = {};
@@ -27,36 +35,38 @@ function goBarChart(dataArr) {
     if (canvas && canvas.getContext) {
         ctx = canvas.getContext("2d");
     }
+
     initChart(); // 图表初始
     drawLineLabelMarkers(); // 绘制图表轴、标签和标记
     drawBarAnimate(); // 绘制柱状图的动画
-    //检测鼠标移
-    var mouseTimer = null;
-    canvas.addEventListener("mousemove", function(e) {
-        e = e || window.event;
-        if (e.layerX || e.layerX == 0) {
-            mousePosition.x = e.layerX;
-            mousePosition.y = e.layerY;
-        } else if (e.offsetX || e.offsetX == 0) {
-            mousePosition.x = e.offsetX;
-            mousePosition.y = e.offsetY;
-        }
+    /*
+        //检测鼠标移
+        var mouseTimer = null;
+        canvas.addEventListener("mousemove", function(e) {
+            e = e || window.event;
+            if (e.layerX || e.layerX == 0) {
+                mousePosition.x = e.layerX;
+                mousePosition.y = e.layerY;
+            } else if (e.offsetX || e.offsetX == 0) {
+                mousePosition.x = e.offsetX;
+                mousePosition.y = e.offsetY;
+            }
 
-        clearTimeout(mouseTimer);
-        mouseTimer = setTimeout(function() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            drawLineLabelMarkers();
-            drawBarAnimate(true);
-        }, 100);
-    });
+            clearTimeout(mouseTimer);
+            mouseTimer = setTimeout(function() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                drawLineLabelMarkers();
+                drawBarAnimate(true);
+            }, 100);
+        });
 
-    //点击刷新图表
-    canvas.onclick = function() {
-        initChart(); // 图表初始
-        drawLineLabelMarkers(); // 绘制图表轴、标签和标记
-        drawBarAnimate(); // 绘制折线图的动画
-    };
-
+        //点击刷新图表
+        canvas.onclick = function() {
+            initChart(); // 图表初始
+            drawLineLabelMarkers(); // 绘制图表轴、标签和标记
+            drawBarAnimate(); // 绘制折线图的动画
+        };
+    */
     function GetStyle1(property) {
         var proValue = null;
         var element = document.getElementById("t_b_6");
@@ -77,27 +87,50 @@ function goBarChart(dataArr) {
         cWidth = canvas.width - cMargin * 2 - cSpace;
         originX = cMargin + cSpace;
         originY = cMargin + cHeight;
-
         // 柱状图信
         bMargin = 20;
         tobalBars = dataArr.length;
         bWidth = parseInt(cWidth / tobalBars - bMargin);
-        maxValue = 0;
-        for (var i = 0; i < dataArr.length; i++) {
-            var barVal = parseInt(dataArr[i][1]);
-            if (barVal > maxValue) {
-                maxValue = barVal;
-            }
+
+        GetWorkValue();
+        maxValue = (parseInt(htmlValue[0] / 10) + 2) * 10;
+        if (maxValue < 10) {
+            maxValue = 10;
         }
-        maxValue += 30;
+        $("#time_1").html(maxValue.toString());
         totalYNomber = 10;
         // 运动相关
         ctr = 1;
         numctr = 100;
-        speed = 10;
+        speed = 2.5;
 
     }
 
+    function GetWorkValue() {
+        var urlStr = "/totalworkcnt?time=" + Math.random();
+        $.ajax({
+            url: urlStr,
+            success: function(data) {
+                //alert(data);
+                //$("#cnt2").html(data);
+                var allData = data.split(",");
+                htmlValue[0] = Number(allData[1]);
+                htmlValue[1] = Number(allData[2]);
+                htmlValue[2] = parseInt(htmlValue[0] - htmlValue[1]);
+                //$("#deviceStatus").html(htmlValue[0].toString());
+                $("#processnum").html(allData[0] + "V");
+                $("#deviceStatus").html(allData[1].toString());
+                //("#cnt").html(data+1000);
+                //y_base = 150+ Math.random()*20;
+            },
+            error: function() {
+                //htmlValue[0] = 30;
+                //$("#cnt2").html("error");
+                //y_base = 250+ Math.random()*20;
+            }
+        });
+
+    }
     // 绘制图表轴、标签和标记
     function drawLineLabelMarkers() {
         ctx.translate(0.5, 0.5); // 当只绘制1像素的线的时候，坐标点需要偏移，这样才能画出1像素实线
@@ -138,7 +171,7 @@ function goBarChart(dataArr) {
             var xMarker = originX - 5;
             var yMarker = parseInt(cHeight * (1 - markerVal / maxValue)) + cMargin;
             //console.log(xMarker, yMarker+3,markerVal/maxValue,originY);
-            ctx.fillText(markerVal, xMarker, yMarker + 3, cSpace); // 文字
+            ctx.fillText(markerVal, xMarker, yMarker + 8, cSpace); // 文字
             if (i > 0) {
                 drawLine(originX, yMarker, originX + cWidth, yMarker);
             }
@@ -160,7 +193,7 @@ function goBarChart(dataArr) {
         ctx.fillText("计   划", originX + cWidth / 2, originY + cSpace / 2 + 30);
 
         ctx.lineWidth = 1; //设置边框大写
-        ctx.strokeStyle = "red"; //填充边框颜色
+        ctx.strokeStyle = "grey"; //填充边框颜色
         ctx.strokeRect(1, 1, canvas.width - 2, canvas.height - 2); //对边框的设置
     }
 
@@ -168,13 +201,14 @@ function goBarChart(dataArr) {
     function drawBarAnimate(mouseMove) {
         for (var i = 0; i < tobalBars; i++) {
             var oneVal = parseInt(maxValue / totalYNomber);
-            var barVal = dataArr[i][1];
+            var barVal = htmlValue[i];
             var barH = parseInt(cHeight * barVal / maxValue * ctr / numctr);
             var y = originY - barH;
             var x = originX + (bWidth + bMargin) * i + bMargin;
             drawRect(x, y, bWidth, barH, mouseMove, i); //高度减一避免盖住
 
-            ctx.fillText(parseInt(barVal * ctr / numctr), x + 28, y - 6); // 文字
+            ctx.fillText(parseInt(barVal * ctr / numctr), x +bWidth/2,y-6);
+            x = originX + (bWidth + bMargin) * i + bMargin; // 文字
         }
         if (ctr < numctr) {
             ctr++;
@@ -203,4 +237,8 @@ function goBarChart(dataArr) {
     }
 
 
+}
+
+function RefreshBar() {
+    var itv = setInterval(goBarChart, 5000);
 }
